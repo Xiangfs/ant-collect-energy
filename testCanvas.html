@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600" style="border: 1px solid #aaa;display: block;margin: 50 auto;"></canvas>
+    <script>
+        var canvas = document.getElementById('canvas')
+        var cxt = canvas.getContext('2d')
+        var cWidth = canvas.width
+        var cHeight = canvas.height
+        var centerX = cWidth / 2
+        var centerY = cHeight - 100
+        var moveTarget = null
+        var targetIndex = null
+        var isMoving = false
+        var step = 100
+        var circleArr = []
+        var xArr = []
+
+        canvas.onclick = circleClick
+
+        function draw() {
+            cxt.clearRect(0, 0, cWidth, cHeight)
+            drawRect(cWidth / 2 - 100, cHeight - 200, 200, 200, 'red')
+            drawRect(cWidth / 2 - 150, cHeight - 300, 300, 300, 'green')
+            circleArr.forEach((val, index) => {
+                drawCircle(val.x, val.y, val.r, 0, Math.PI * 2, val.count, val.text)
+            })
+            if (moveTarget) {
+                var moveX = Math.abs(moveTarget.x - centerX) / 10
+                var moveY = Math.abs(moveTarget.y - centerY) / 10
+                if (Math.abs(moveTarget.x - centerX) > 20 || Math.abs(moveTarget.y - centerY) > 20) {
+                    moveTarget.x += moveTarget.x < centerX ? moveX : -moveX
+                    moveTarget.y += moveTarget.y < centerY ? moveY : -moveY
+                    window.requestAnimationFrame(draw)
+                } else {
+                    isMoving = false
+                    moveTarget = null
+                    circleArr.splice(targetIndex, 1)
+                    targetIndex = null
+                    draw()
+                }
+            }
+        }
+        function drawRect(x, y, width, height, color) {
+            cxt.beginPath()
+            cxt.strokeStyle = color
+            cxt.lineWidth = 1
+            cxt.strokeRect(x, y, width, height)
+            cxt.closePath()
+        }
+        function drawCircle(x, y, r, sAng, eAng, count, text) {
+            cxt.lineWidth = 1
+            cxt.beginPath()
+            cxt.arc(x, y, r, sAng, eAng, false)
+            cxt.closePath()
+            cxt.fillStyle = '#848484'
+            cxt.fill()
+            cxt.fillStyle = '#fff'
+            cxt.font = '16px serif'
+            cxt.textAlign = 'center'
+            cxt.fillText(`+ ${count}`, x, y + 4)
+            cxt.fillStyle = '#000'
+            cxt.fillText(text, x, y + r + 20)
+        }
+        function randomNum(from, to) {
+            return Math.floor(Math.random() * (to - from + 1) + from)
+        }
+        function createList(count) {
+            while(circleArr.length < count) {
+                console.count('create')
+                var x = randomNum(50, cWidth - 50)
+                var y = randomNum(50, cHeight - 50)
+                if (!((x >= cWidth / 2 - 300 && x <= cWidth / 2 + 300) && y >= cHeight - 300)) {
+                    if (!isNear(x)) {
+                        circleArr.push({
+                            x,
+                            y,
+                            r: 34,
+                            count: randomNum(1, 20),
+                            text: '消费'
+                        })
+                        xArr.push(x)
+                    }
+                }
+            }
+        }
+        function circleClick(e) {
+            if (!isMoving) {
+                circleArr.forEach((val, index) => {
+                    if (Math.abs(e.clientX - val.x) <= val.r + 5 && Math.abs(e.clientY - val.y) <= val.r + 5) {
+                        targetIndex = index
+                        startMove(targetIndex)
+                    }
+                })
+            }
+        }
+        function startMove(index) {
+            moveTarget = circleArr[index]
+            isMoving = true
+            draw()
+        }
+        function isNear(x) {
+            var near = false
+            xArr.forEach(val => {
+                if (Math.abs(x - val) < 40) {
+                    near = true
+                }
+            })
+            return near
+        }
+        window.onload = function () {
+            createList(5)
+            draw()
+        }
+    </script>
+</body>
+</html>
