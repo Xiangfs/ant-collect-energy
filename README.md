@@ -10,4 +10,5 @@
 
 效果图：
 
-![image](https://github.com/Xiangfs/ant-collect-energy/tree/master/src/assets/display.gif)
+![效果图](/src/assets/display.gif)
+
