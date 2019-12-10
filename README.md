@@ -7,3 +7,7 @@
 ### 于是自己实现了一版，现在整理成仿蚂蚁森林的效果，供有需要的人参考
 
 ### 代码中有问题及可以优化的地方，欢迎大家指出
+
+效果图：
+
+![image](https://github.com/Xiangfs/ant-collect-energy/tree/master/src/assets/display.gif)
