@@ -15,8 +15,14 @@
   from {
     transform: scale3d(1, 1, 1) translateX(-50%);
   }
+  25% {
+    transform: scale3d(1, 1.05, 1) translateX(-50%);
+  }
   50% {
     transform: scale3d(1, 0.95, 1) translateX(-50%);
+  }
+  75% {
+    transform: scale3d(1, 1.05, 1) translateX(-50%);
   }
   to {
     transform: scale3d(1, 1, 1) translateX(-50%);
@@ -178,7 +184,7 @@ export default {
       var near = false
       this.xArr.forEach(val => {
         // 本来为至少要小于2倍半径，但如果其余4个点把屏幕4均分了，第5个点就永远满足不了条件，故改为小于1.5倍半径
-        // 如果两个圆的x相差小于1.5呗半径，即有多于4/3个圆的部分重叠，则判断为太近
+        // 如果两个圆的x相差小于1.5倍半径，即有多于4/3个圆的部分重叠，则判断为太近
         if (Math.abs(x - val) < (this.r * 3) / 2) {
           near = true
         }
