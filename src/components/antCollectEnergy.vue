@@ -133,8 +133,8 @@ export default {
     },
     startMove (index) {
       if (!this.isMoving) {
-        this.moveTarget = this.circleArr[index]
-        this.targetIndex = index
+        this.moveTarget = this.circleArr[index] // 保存要移动的目标对象
+        this.targetIndex = index // 保存移动目标的索引
         this.isMoving = true
         this.move()
       }
@@ -150,16 +150,19 @@ export default {
           moveTarget.scale -= 0.02
           window.requestAnimationFrame(this.move)
         } else {
+          // 重置移动相关参数
           this.isMoving = false
           this.moveTarget = null
-          this.circleArr.splice(this.targetIndex, 1)
           this.targetIndex = null
+          this.circleArr.splice(this.targetIndex, 1) // 删除移动完成的点
         }
       }
     },
+    // 生成随机数方法
     randomNum (from, to) {
       return Math.floor(Math.random() * (to - from + 1) + from)
     },
+    // 生成圆点方法
     createList (count) {
       let { cWidth, cHeight, circlePadding, treeHeight } = this
       let index = 0
@@ -167,15 +170,18 @@ export default {
         if (index > 100) return false
         index++
         var x = this.randomNum(circlePadding, cWidth - circlePadding)
+        // y的范围为树的最高点到屏幕顶部
         var y = this.randomNum(cHeight - treeHeight - 220, cHeight - treeHeight - 120)
+        // 判断是否与已有的点太近
         if (!this.isNear(x)) {
           this.circleArr.push({
             x,
             y,
             r: this.r,
             count: this.randomNum(1, 20),
-            scale: 1
+            scale: 1// 用于动画缩放倍数的参数，默认为1
           })
+          // xArr用于判断点与点是否太近
           this.xArr.push(x)
         }
       }
@@ -183,8 +189,8 @@ export default {
     isNear (x) {
       var near = false
       this.xArr.forEach(val => {
-        // 本来为至少要小于2倍半径，但如果其余4个点把屏幕4均分了，第5个点就永远满足不了条件，故改为小于1.5倍半径
-        // 如果两个圆的x相差小于1.5倍半径，即有多于4/3个圆的部分重叠，则判断为太近
+        // 本来为至少要小于2倍半径，但如果其余的点把屏幕均分了，下一个点就永远满足不了条件，故改为小于1.5倍半径，即有多于4/3个圆的部分重叠，则判断为太近
+        // 这里可以根据需要更改判断条件
         if (Math.abs(x - val) < (this.r * 3) / 2) {
           near = true
         }
